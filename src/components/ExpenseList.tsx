@@ -5,10 +5,14 @@ import { useBudget } from "../hooks/useBudget";
 export default function ExpenseList() {
   const { state } = useBudget();
 
-  const isEmpty = useMemo(() => state.expense.length === 0, [state.expense]);
+  const filteredExpenses = state.currentCategory ? state.expense.filter(
+    (expense) => expense.category === state.currentCategory
+  ) : state.expense;
+
+  const isEmpty = useMemo(() => filteredExpenses.length === 0, [filteredExpenses]);
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 bg-white shadow-lg rounded-lg p-10">
       {isEmpty ? (
         <p className="text-gray-600 text-2xl font-bold">No hay gastos</p>
       ) : (
@@ -17,7 +21,7 @@ export default function ExpenseList() {
             {" "}
             Listado de Gastos
           </p>
-          {state.expense.map((expense) => (
+          {filteredExpenses.map((expense) => (
             <ExpenseDetail key={expense.id} expense={expense} />
           ))}
         </>

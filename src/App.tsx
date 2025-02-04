@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import BudgetForm from "./components/BudgetForm";
 import { useBudget } from "./hooks/useBudget";
 import BudgetTracker from "./components/BudgetTracker";
 import ExpenseModal from "../../control-gastos-contextapi/src/components/ExpenseModal";
 import ExpenseList from '../../control-gastos-contextapi/src/components/ExpenseList';
+import FilterByCategory from "./components/FilterByCategory";
 
 function App() {
   const { state } = useBudget();
@@ -12,6 +13,11 @@ function App() {
     () => isNaN(state.budget) || state.budget > 0,
     [state.budget]
   );
+
+  useEffect(() => {
+    localStorage.setItem("budget", state.budget.toString());
+    localStorage.setItem("expense", JSON.stringify(state.expense));
+  }, [state]);
 
   return (
     <>
@@ -27,6 +33,7 @@ function App() {
 
       {isValidBudget && (
         <main className="max-w-3xl mx-auto py-10">
+          <FilterByCategory />
           <ExpenseList />
           <ExpenseModal />
         </main>
